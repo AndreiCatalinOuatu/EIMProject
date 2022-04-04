@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Health Monitor</string>
+    <string name="verifica_tensiunea_arteriala">Verifica tensiunea arteriala</string>
+    <string name="tensiune_sistolica">Tensiune sistolica</string>
+    <string name="tensiune_diastolica">Tensiune diastolica</string>
+    <string name="adauga_inregistrare">Adauga Inregistrare</string>
+    <string name="tensiune_arteriala">Tensiune Arteriala</string>
 </resources>

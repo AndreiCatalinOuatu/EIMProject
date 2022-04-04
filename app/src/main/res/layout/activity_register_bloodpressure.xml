@@ -1,6 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/tensiune_sistolica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:hint="@string/tensiune_sistolica"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:labelFor="@id/tensiune_sistolica"
+        android:maxLength="3"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:orientation="horizontal"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toTopOf="@+id/verifica"
+        app:layout_constraintEnd_toStartOf="@+id/tensiune_diastolica"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TA" />
+
+    <EditText
+        android:id="@+id/tensiune_diastolica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:hint="@string/tensiune_diastolica"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:labelFor="@id/tensiune_diastolica"
+        android:maxLength="3"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:orientation="horizontal"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toTopOf="@+id/verifica"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tensiune_sistolica"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.713" />
+
+    <Button
+        android:id="@+id/verifica"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/verifica_tensiunea_arteriala"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.486" />
+
+    <Button
+        android:id="@+id/adaugaTA"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/adauga_inregistrare"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/verifica"
+        app:layout_constraintVertical_bias="0.059" />
+
+    <TextView
+        android:id="@+id/TA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tensiune_arteriala"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tensiune_sistolica"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.135"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/infoTA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/tensiune_diastolica"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.105"
+        app:layout_constraintStart_toEndOf="@+id/TA"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.509"
+        app:srcCompat="@drawable/ic_info_icon"
+        tools:ignore="SpeakableTextPresentCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
