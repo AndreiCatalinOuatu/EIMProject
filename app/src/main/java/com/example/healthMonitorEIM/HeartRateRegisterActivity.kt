@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.healthMonitorEIM
 
 import android.content.DialogInterface
 import android.content.Intent

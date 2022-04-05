@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.healthMonitorEIM
 
 import org.junit.Test
 

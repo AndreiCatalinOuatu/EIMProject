@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "19735413012",
+    "project_id": "healthmonitor-4c635",
+    "storage_bucket": "healthmonitor-4c635.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19735413012:android:633c410ba62d1103bb0201",
+        "android_client_info": {
+          "package_name": "com.example.healthMonitorEIM"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "19735413012-95ggal1cqd9vrcenf7gkdv46tcnttf1g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK4OO9-WpiNKK5BnAxYIm8kyjXxqUQm2k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "19735413012-95ggal1cqd9vrcenf7gkdv46tcnttf1g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
