@@ -5,4 +5,25 @@
     <string name="tensiune_diastolica">Tensiune diastolica</string>
     <string name="adauga_inregistrare">Adauga Inregistrare</string>
     <string name="tensiune_arteriala">Tensiune Arteriala</string>
+    <string name="adauga_tratament">Adauga Tratament Nou</string>
+    <string name="monitorizeaza_parametri">Monitorizeaza Parametri</string>
+    <string name="vizualizeaza_statistici">Vizualizeaza Statistici</string>
+    <string name="detalii_tratament">Vizualizeaza Detalii Tratament</string>
+    <string name="alerta">Alerteaza</string>
+    <string name="verifica_puls">Verifica Puls</string>
+    <string name="valoare_puls">Valoare Puls</string>
+    <string name="puls">Puls</string>
+    <string name="denumire_medicament">Denumire Medicament</string>
+    <string name="numar_comprimate_pe_zi">Numar Comprimate Pe Zi</string>
+    <string name="numar_de_zile_de_tratament">Numar de zile de tratament</string>
+    <string name="numar_de_telefon_al_medicului_curant">Numar de telefon al medicului curant</string>
+    <string name="glicemie">Glicemie</string>
+    <string name="verifica_glicemie">Verifica Glicemie</string>
+    <string name="valoare_glicemie">Valoare glicemie</string>
+    <string name="spo2">SpO2</string>
+    <string name="valoare_spo2">Valoare SpO2</string>
+    <string name="verifica_spo2">Verifica SpO2</string>
+    <string name="indice_de_stres">Indice de Stres</string>
+    <string name="verifica_indice_de_stres">Verifica Indice De Stres</string>
+    <string name="valoare_indice_de_stres">Valoare Indice De Stres</string>
 </resources>

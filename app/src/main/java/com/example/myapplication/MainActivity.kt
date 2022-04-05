@@ -3,7 +3,6 @@ package com.example.myapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
@@ -14,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.button)
 
         btn.setOnClickListener {
-            val intent = Intent(this@MainActivity, BloodPressureActivity::class.java)
+            val intent = Intent(this@MainActivity, DashboardActivity::class.java)
             startActivity(intent)
         }
     }

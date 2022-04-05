@@ -87,6 +87,8 @@ class BloodPressureActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext, "Tensiunea dvs este in limitele normale!", Toast.LENGTH_SHORT).show()
                     }
                 }
+
+                // TODO: Add data in Database
             }
         }
 

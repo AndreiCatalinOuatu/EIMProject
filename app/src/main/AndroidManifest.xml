@@ -13,6 +13,27 @@
         <activity android:name=".BloodPressureActivity"
             android:exported="false"/>
 
+        <activity android:name=".DashboardActivity"
+            android:exported="false" />
+
+        <activity android:name=".HeartRateRegisterActivity"
+            android:exported="false" />
+
+        <activity android:name=".BloodSugarRegisterActivity"
+            android:exported="false" />
+
+        <activity android:name=".ViewMedicationsActivity"
+            android:exported="false" />
+
+        <activity android:name=".ViewStatsActivity"
+            android:exported="false" />
+
+        <activity android:name=".OxygenSaturationRegisterActivity"
+            android:exported="false" />
+
+        <activity android:name=".StressRegisterActivity"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

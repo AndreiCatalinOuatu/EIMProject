@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/oxygenSaturation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/spo2"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.099"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.084" />
+
+    <ImageButton
+        android:id="@+id/oxygenSaturationInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toEndOf="@+id/oxygenSaturation"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.084"
+        app:srcCompat="@drawable/ic_info_icon"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/checkOxygenSaturation"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/verifica_spo2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/oxygenSaturationInfo"
+        app:layout_constraintVertical_bias="0.367" />
+
+    <Button
+        android:id="@+id/registerOxygenSaturation"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/adauga_inregistrare"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkOxygenSaturation"
+        app:layout_constraintVertical_bias="0.041" />
+
+    <EditText
+        android:id="@+id/oxygenSaturationValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="@string/valoare_spo2"
+        android:inputType="number"
+        android:maxLength="3"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:orientation="horizontal"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toTopOf="@+id/checkOxygenSaturation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/oxygenSaturationInfo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,8 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_dashboard.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_main.xml" value="0.35052083333333334" />
         <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_register_bloodpressure.xml" value="0.26458333333333334" />
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_register_bloodsugar.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_register_heartrate.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_register_oxygensaturation.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_register_stress.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_view_medications.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_view_stats.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/add_hours_dialog.xml" value="0.35052083333333334" />
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/add_medication_dialog_layout.xml" value="0.19479166666666667" />
       </map>
     </option>
   </component>
