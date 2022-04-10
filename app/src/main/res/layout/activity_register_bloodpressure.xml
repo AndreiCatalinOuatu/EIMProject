@@ -70,6 +70,18 @@
         app:layout_constraintTop_toBottomOf="@+id/verifica"
         app:layout_constraintVertical_bias="0.059" />
 
+    <Button
+        android:id="@+id/verificaGhid"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="Cum monitorizez corect?"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adaugaTA"
+        app:layout_constraintVertical_bias="0.059" />
+
     <TextView
         android:id="@+id/TA"
         android:layout_width="wrap_content"

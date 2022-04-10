@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_authentication.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_dashboard.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_main.xml" value="0.35052083333333334" />
         <entry key="..\:/Users/Andrei/AndroidStudioProjects/EIMproject/app/src/main/res/layout/activity_register_bloodpressure.xml" value="0.26458333333333334" />

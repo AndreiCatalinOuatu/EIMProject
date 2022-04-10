@@ -7,7 +7,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.myapplication"
+        applicationId "com.example.healthMonitorEIM"
         minSdk 24
         targetSdk 31
         versionCode 1
@@ -50,4 +50,9 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    implementation 'org.jsoup:jsoup:1.10.3'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7"
 }

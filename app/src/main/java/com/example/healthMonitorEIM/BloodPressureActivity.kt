@@ -10,6 +10,12 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
 
 class BloodPressureActivity : AppCompatActivity() {
 
@@ -27,6 +33,19 @@ class BloodPressureActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, android.R.string.no, Toast.LENGTH_SHORT).show()
     }
 
+    private suspend fun printOnMainThread(input: String) {
+        withContext(Main) {
+            val alertBuilder = AlertDialog.Builder(this@BloodPressureActivity)
+
+            with (alertBuilder) {
+                setTitle("Monitorizarea corecta a TA")
+                setMessage(input)
+                setPositiveButton("Am inteles", null)
+                show()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_bloodpressure)
@@ -35,10 +54,9 @@ class BloodPressureActivity : AppCompatActivity() {
         val diastolicBP = findViewById<EditText>(R.id.tensiune_diastolica)
 
         val checkBP = findViewById<Button>(R.id.verifica)
-
         val infoBP = findViewById<ImageButton>(R.id.infoTA)
-
         val registerBP = findViewById<Button>(R.id.adaugaTA)
+        val guideBtn = findViewById<Button>(R.id.verificaGhid)
 
         infoBP.setOnClickListener {
             val infoBuilder = AlertDialog.Builder(this)
@@ -106,5 +124,25 @@ class BloodPressureActivity : AppCompatActivity() {
                 }
             }
         }
+
+        guideBtn.setOnClickListener {
+            CoroutineScope(IO).launch {
+                kotlin.runCatching {
+                    val doc = Jsoup.connect("https://viatacudiabet.ro/controlul-diabetului/despre-glicemie/cum-sa-iti-masori-corect-glicemia-50").get()
+                    val title = doc.title()
+                    val bodyTxt = doc.body().text()
+                    val el = doc.getElementById("article")
+                    val links = el.select("p")
+                    var msg = ""
+
+                    for (link in links) {
+                        msg += link.text().toString() + "\n"
+                    }
+
+                   printOnMainThread(msg)
+                }
+            }
+        }
     }
+
 }

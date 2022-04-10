@@ -26,4 +26,9 @@
     <string name="indice_de_stres">Indice de Stres</string>
     <string name="verifica_indice_de_stres">Verifica Indice De Stres</string>
     <string name="valoare_indice_de_stres">Valoare Indice De Stres</string>
+    <string name="creeaza_cont">Creeaza Cont</string>
+    <string name="parola">Parola</string>
+    <string name="email">Email</string>
+    <string name="creeare_cont">Creare Cont</string>
+    <string name="telefon_persoana_de_contact">Telefon Persoana de Contact</string>
 </resources>
