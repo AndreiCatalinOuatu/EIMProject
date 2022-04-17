@@ -31,4 +31,19 @@
     <string name="email">Email</string>
     <string name="creeare_cont">Creare Cont</string>
     <string name="telefon_persoana_de_contact">Telefon Persoana de Contact</string>
+    <string name="cum_monitorizez_corect">Cum monitorizez corect?</string>
+    <string-array name="parameters_array">
+        <item>Alege un parametru…</item>
+        <item>Tensiune Arteriala</item>
+        <item>Puls</item>
+        <item>Glicemie</item>
+        <item>Saturatia de oxigen</item>
+        <item>Indice de stres</item>
+    </string-array>
+    <string-array name="periods_array">
+        <item>Alege o perioada…</item>
+        <item>Ultimele 3 zile</item>
+        <item>Ultima saptamana</item>
+        <item>Ultima luna</item>
+    </string-array>
 </resources>

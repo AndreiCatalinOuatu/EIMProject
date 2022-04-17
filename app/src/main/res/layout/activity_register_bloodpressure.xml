@@ -74,7 +74,7 @@
         android:id="@+id/verificaGhid"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:text="Cum monitorizez corect?"
+        android:text="@string/cum_monitorizez_corect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

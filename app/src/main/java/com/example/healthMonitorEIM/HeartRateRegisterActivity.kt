@@ -10,6 +10,11 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
 
 class HeartRateRegisterActivity : AppCompatActivity() {
 
@@ -23,6 +28,19 @@ class HeartRateRegisterActivity : AppCompatActivity() {
         startActivity(phoneCallIntent)
     }
 
+    private suspend fun printOnMainThread(input: String) {
+        withContext(Dispatchers.Main) {
+            val alertBuilder = AlertDialog.Builder(this@HeartRateRegisterActivity)
+
+            with(alertBuilder) {
+                setTitle("Monitorizarea corecta a Pulsului")
+                setMessage(input)
+                setPositiveButton("Am inteles", null)
+                show()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_heartrate)
@@ -31,6 +49,7 @@ class HeartRateRegisterActivity : AppCompatActivity() {
         val checkPulseBtn = findViewById<Button>(R.id.checkPulse)
         val registerPulseBtn = findViewById<Button>(R.id.registerPulse)
         val infoPulseBtn = findViewById<ImageButton>(R.id.pulseInfo)
+        val checkPulseGuideBtn = findViewById<Button>(R.id.checkHrGuide)
 
         infoPulseBtn.setOnClickListener {
             val infoBuilder = AlertDialog.Builder(this)
@@ -75,6 +94,32 @@ class HeartRateRegisterActivity : AppCompatActivity() {
                 }
 
                 // TODO: Add data in DataBase
+            }
+        }
+
+        checkPulseGuideBtn.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                kotlin.runCatching {
+                    val doc =
+                        Jsoup.connect("https://www.romedic.ro/masurarea-pulsului-0P34728")
+                            .get()
+                    val el = doc.getElementById("localizarea-pulsului")
+                    var node = el.nextSibling()
+                    var msg = node.toString()
+
+                    while (!node.nextSibling().toString().contains("Frecvența cardiacă", ignoreCase = true)) {
+                        node = node.nextSibling()
+                        msg += node.toString()
+                    }
+
+                    msg = msg.replace("<br>", "").replace("<ul>", "")
+                        .replace("<li>", "").replace("<ul>", "")
+                        .replace("<b>", "").replace("</b>", "")
+                        .replace("</li>", "").replace("</ul>", "")
+                        .replace("&nbsp;", "")
+
+                    printOnMainThread(msg)
+                }
             }
         }
 

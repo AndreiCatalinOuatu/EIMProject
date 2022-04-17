@@ -29,10 +29,6 @@ class BloodPressureActivity : AppCompatActivity() {
         startActivity(phoneCallIntent)
     }
 
-    private val negativeButtonClick = { _: DialogInterface, _: Int ->
-        Toast.makeText(applicationContext, android.R.string.no, Toast.LENGTH_SHORT).show()
-    }
-
     private suspend fun printOnMainThread(input: String) {
         withContext(Main) {
             val alertBuilder = AlertDialog.Builder(this@BloodPressureActivity)
@@ -90,16 +86,16 @@ class BloodPressureActivity : AppCompatActivity() {
                 val builder = AlertDialog.Builder(this)
 
                 with (builder) {
-                    setTitle("ALERTA TENSIUNE ARTERIALA")
+                    setTitle("ALERTA TENSIUNE ARTERIALA ANORMALA")
                     if (systolicBPValue < 90 || diastolicBPValue < 60) {
                         setMessage("Tensiunea arteriala este prea scazuta!")
                         setPositiveButton("Contacteaza Medic", DialogInterface.OnClickListener(function = positiveButtonClick))
-                        setNegativeButton(android.R.string.no, negativeButtonClick)
+                        setNegativeButton("Am inteles", null)
                         show()
                     } else if (systolicBPValue > 120 || diastolicBPValue > 90) {
                         setMessage("Tensiunea arteriala este prea ridicata!")
                         setPositiveButton("Contacteaza Medic", DialogInterface.OnClickListener(function = positiveButtonClick))
-                        setNegativeButton(android.R.string.no, negativeButtonClick)
+                        setNegativeButton("Am inteles", null)
                         show()
                     } else {
                         Toast.makeText(applicationContext, "Tensiunea dvs este in limitele normale!", Toast.LENGTH_SHORT).show()
@@ -128,10 +124,8 @@ class BloodPressureActivity : AppCompatActivity() {
         guideBtn.setOnClickListener {
             CoroutineScope(IO).launch {
                 kotlin.runCatching {
-                    val doc = Jsoup.connect("https://viatacudiabet.ro/controlul-diabetului/despre-glicemie/cum-sa-iti-masori-corect-glicemia-50").get()
-                    val title = doc.title()
-                    val bodyTxt = doc.body().text()
-                    val el = doc.getElementById("article")
+                    val doc = Jsoup.connect("https://www.reginamaria.ro/articole-medicale/invata-sa-ti-masori-corect-tensiunea-arteriala").get()
+                    /*val el = doc.getElementById("article")
                     val links = el.select("p")
                     var msg = ""
 
@@ -139,7 +133,7 @@ class BloodPressureActivity : AppCompatActivity() {
                         msg += link.text().toString() + "\n"
                     }
 
-                   printOnMainThread(msg)
+                   printOnMainThread(msg)*/
                 }
             }
         }
