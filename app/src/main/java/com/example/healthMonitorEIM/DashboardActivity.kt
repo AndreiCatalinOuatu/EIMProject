@@ -1,7 +1,12 @@
 package com.example.healthMonitorEIM
 
+import android.app.*
+import android.content.Context
 import android.content.Intent
+import android.icu.util.Calendar
 import android.net.Uri
+import android.os.Build
+import android.os.Build.*
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -11,6 +16,22 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class DashboardActivity : AppCompatActivity() {
+
+    private var alarmMgr: AlarmManager? = null
+    private lateinit var alarmIntent: PendingIntent
+
+    private fun createNotificationChannel() {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            val channelName = "notifyHealthMonitorChannel"
+            val description = "Channel for Medication Reminder"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelID, channelName, importance)
+            channel.description = description
+
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,16 +108,11 @@ class DashboardActivity : AppCompatActivity() {
             val durationTxt = builderView.findViewById<EditText>(R.id.duration)
             val doctorPhoneNo = builderView.findViewById<EditText>(R.id.doctorPhoneNo)
 
+            createNotificationChannel()
+
             builder.setTitle("Adauga Tratament Nou")
             builder.setPositiveButton("Adauga Tratament") { _, _ ->
-                Toast.makeText(
-                    applicationContext,
-                    medicationNameTxt.text.toString() + pillsPerDayTxt.text.toString() + durationTxt.text.toString() + doctorPhoneNo.text.toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
-
-
-
+                scheduleNotification()
                 // TODO: Add these values to database
             }
 
@@ -111,5 +127,31 @@ class DashboardActivity : AppCompatActivity() {
         viewMedicationsBtn.setOnClickListener {
             startActivity(Intent(applicationContext, ViewMedicationsActivity::class.java))
         }
+    }
+
+    private fun scheduleNotification() {
+        val intent = Intent(applicationContext, AlarmReceiver::class.java)
+        intent.putExtra(titleExtra, "Notificare medicamentatie")
+        intent.putExtra(messageExtra, "Aveti de luat 3 Nurofen astazi")
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            notificationID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 11)
+            set(Calendar.MINUTE, 14)
+        }
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            1000 * 60 * 60 * 24,
+            pendingIntent
+        )
     }
 }

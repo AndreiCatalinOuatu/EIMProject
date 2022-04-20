@@ -34,7 +34,8 @@
     <string name="cum_monitorizez_corect">Cum monitorizez corect?</string>
     <string-array name="parameters_array">
         <item>Alege un parametru…</item>
-        <item>Tensiune Arteriala</item>
+        <item>Tensiune Arteriala Sistolica</item>
+        <item>Tensiune Arteriala Diastolica</item>
         <item>Puls</item>
         <item>Glicemie</item>
         <item>Saturatia de oxigen</item>
