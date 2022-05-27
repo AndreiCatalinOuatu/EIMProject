@@ -10,19 +10,29 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val loginBtn = findViewById<Button>(R.id.loginBtn)
-
-        loginBtn.setOnClickListener {
+        auth = Firebase.auth
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
             val intent = Intent(this@MainActivity, DashboardActivity::class.java)
             startActivity(intent)
         }
+        /*
+        loginBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, DashboardActivity::class.java)
+            startActivity(intent)
+        }*/
 
         val noAccountTxt = findViewById<TextView>(R.id.authText)
 
