@@ -14,9 +14,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.healthMonitorEIM.Model.Medication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.*
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Response
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -119,8 +126,20 @@ class DashboardActivity : AppCompatActivity() {
             builder.setPositiveButton("Adauga Tratament") { _, _ ->
                 scheduleNotification()
                 // TODO: Add these values to database
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.IO) {
+                        addMedication(
+                            Medication(
+                                durationTxt.text.toString(),
+                                doctorPhoneNo.text.toString(),
+                                medicationNameTxt.text.toString(),
+                                pillsPerDayTxt.text.toString(),
+                                user
+                            )
+                        )
+                    }
+                }
             }
-
             val b = builder.create()
             b.show()
         }
@@ -158,5 +177,19 @@ class DashboardActivity : AppCompatActivity() {
             1000 * 60 * 60 * 24,
             pendingIntent
         )
+    }
+
+    private fun addMedication(medication: Medication) {
+        MedicationApi.retrofitService.postMedication(1, medication).enqueue(object:
+            retrofit2.Callback<Void> {
+            override fun onResponse(
+                call: Call<Void>,
+                response: Response<Void>
+            ) {}
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
     }
 }
