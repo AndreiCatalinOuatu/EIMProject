@@ -14,11 +14,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.*
+import com.google.firebase.ktx.Firebase
 
 class DashboardActivity : AppCompatActivity() {
 
     private var alarmMgr: AlarmManager? = null
     private lateinit var alarmIntent: PendingIntent
+    private lateinit var auth: FirebaseAuth
 
     private fun createNotificationChannel() {
         if (VERSION.SDK_INT >= VERSION_CODES.O) {
@@ -38,7 +42,8 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dashboard)
 
         val helloMsg = findViewById<TextView>(R.id.hello)
-        val user = "User"
+        auth = Firebase.auth
+        val user = auth.currentUser?.email.toString()
         helloMsg.text = "Buna, $user!"
 
         val monitorParamBtn = findViewById<Button>(R.id.monitorParameters)

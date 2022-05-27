@@ -36,7 +36,7 @@ class AuthActivity : AppCompatActivity() {
                         val intent = Intent(this@AuthActivity, DashboardActivity::class.java)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(applicationContext, "Sign uo failed!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Sign up failed!", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
