@@ -10,11 +10,17 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.healthMonitorEIM.Model.Counters
+import com.example.healthMonitorEIM.Model.HeartRate
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import retrofit2.Call
+import retrofit2.Response
 
 class HeartRateRegisterActivity : AppCompatActivity() {
 
@@ -54,17 +60,19 @@ class HeartRateRegisterActivity : AppCompatActivity() {
         infoPulseBtn.setOnClickListener {
             val infoBuilder = AlertDialog.Builder(this)
 
-            with (infoBuilder) {
+            with(infoBuilder) {
                 setTitle("Pulsul")
-                setMessage("Pulsul este cunoscut ca masura a batailor inimii. In esenta pulsul " +
-                        "reprezinta extinderea arterelor.  Această expansiune este cauzată de o " +
-                        "creștere a tensiunii arteriale care împinge împotriva pereților elastici ai " +
-                        "arterelor de fiecare dată când inima bate. Aceste extinderi cresc și se " +
-                        "retrag odată cu inima, în timp ce pompează sângele, și apoi se odihnește pe " +
-                        "măsură ce se reumple. " +
-                        "Pulsările sunt resimțite în anumite puncte ale corpului, unde arterele mai " +
-                        "mari se situează mai aproape de piele. " +
-                        "In repaos pulsul ar trebui sa se situeze intre 60 si 100.")
+                setMessage(
+                    "Pulsul este cunoscut ca masura a batailor inimii. In esenta pulsul " +
+                            "reprezinta extinderea arterelor.  Această expansiune este cauzată de o " +
+                            "creștere a tensiunii arteriale care împinge împotriva pereților elastici ai " +
+                            "arterelor de fiecare dată când inima bate. Aceste extinderi cresc și se " +
+                            "retrag odată cu inima, în timp ce pompează sângele, și apoi se odihnește pe " +
+                            "măsură ce se reumple. " +
+                            "Pulsările sunt resimțite în anumite puncte ale corpului, unde arterele mai " +
+                            "mari se situează mai aproape de piele. " +
+                            "In repaos pulsul ar trebui sa se situeze intre 60 si 100."
+                )
                 setPositiveButton("Am inteles", null)
                 show()
             }
@@ -76,24 +84,44 @@ class HeartRateRegisterActivity : AppCompatActivity() {
             } else {
                 val builder = AlertDialog.Builder(this)
 
-                with (builder) {
+                with(builder) {
                     setTitle("ALERTA PULS ANORMAL")
                     if (pulseValue.text.toString().toInt() < 60) {
                         setMessage("Pulsul este sub limita normala!")
-                        setPositiveButton("Contacteaza Medic", DialogInterface.OnClickListener(function = positiveButtonClick))
+                        setPositiveButton(
+                            "Contacteaza Medic",
+                            DialogInterface.OnClickListener(function = positiveButtonClick)
+                        )
                         setNegativeButton("OK", null)
                         show()
                     } else if (pulseValue.text.toString().toInt() > 100) {
                         setMessage("Pulsul este peste limita normala!")
-                        setPositiveButton("Contacteaza Medic", DialogInterface.OnClickListener(function = positiveButtonClick))
+                        setPositiveButton(
+                            "Contacteaza Medic",
+                            DialogInterface.OnClickListener(function = positiveButtonClick)
+                        )
                         setNegativeButton("OK", null)
                         show()
                     } else {
-                        Toast.makeText(applicationContext, "Pulsul se afla in limite normale!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            applicationContext,
+                            "Pulsul se afla in limite normale!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
-                // TODO: Add data in DataBase
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.IO) {
+                        addHeartRate(
+                            HeartRate(
+                                pulseValue.text.toString(),
+                                System.currentTimeMillis(),
+                                Firebase.auth.currentUser?.email.toString()
+                            )
+                        )
+                    }
+                }
             }
         }
 
@@ -107,7 +135,9 @@ class HeartRateRegisterActivity : AppCompatActivity() {
                     var node = el.nextSibling()
                     var msg = node.toString()
 
-                    while (!node.nextSibling().toString().contains("Frecvența cardiacă", ignoreCase = true)) {
+                    while (!node.nextSibling().toString()
+                            .contains("Frecvența cardiacă", ignoreCase = true)
+                    ) {
                         node = node.nextSibling()
                         msg += node.toString()
                     }
@@ -124,7 +154,73 @@ class HeartRateRegisterActivity : AppCompatActivity() {
         }
 
         registerPulseBtn.setOnClickListener {
-            // TODO: Add data in Database
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.IO) {
+                    addHeartRate(
+                        HeartRate(
+                            pulseValue.text.toString(),
+                            System.currentTimeMillis(),
+                            Firebase.auth.currentUser?.email.toString()
+                        )
+                    )
+                }
+            }
+            Toast.makeText(
+                applicationContext,
+                "Pulsul a fost inregistrat cu succes!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
+    }
+
+    private fun addHeartRate(heartRate: HeartRate) {
+        var id: Long
+
+        MedicationApi.retrofitService.getCounters().enqueue(object : retrofit2.Callback<Counters> {
+            override fun onResponse(call: Call<Counters>, response: Response<Counters>) {
+                if (response.isSuccessful) {
+                    id = response.body()!!.counterHR
+                    val updatedCounters = Counters(
+                        response.body()!!.counterMeds,
+                        response.body()!!.counterUsers,
+                        response.body()!!.counterBP,
+                        response.body()!!.counterBS,
+                        id + 1,
+                        response.body()!!.counterOS
+                    )
+
+                    MedicationApi.retrofitService.postHearRate(id, heartRate)
+                        .enqueue(object : retrofit2.Callback<Void> {
+                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                if (response.isSuccessful) {
+                                    MedicationApi.retrofitService.postCounters(updatedCounters)
+                                        .enqueue(object : retrofit2.Callback<Void> {
+                                            override fun onResponse(
+                                                call: Call<Void>,
+                                                response: Response<Void>
+                                            ) {
+                                            }
+
+                                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                                t.printStackTrace()
+                                            }
+
+                                        })
+                                }
+                            }
+
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                t.printStackTrace()
+                            }
+
+                        })
+                }
+            }
+
+            override fun onFailure(call: Call<Counters>, t: Throwable) {
+                t.printStackTrace()
+            }
+
+        })
     }
 }

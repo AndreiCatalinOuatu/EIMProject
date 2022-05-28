@@ -10,11 +10,17 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.healthMonitorEIM.Model.BloodSugar
+import com.example.healthMonitorEIM.Model.Counters
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import retrofit2.Call
+import retrofit2.Response
 
 class BloodSugarRegisterActivity : AppCompatActivity() {
 
@@ -32,7 +38,7 @@ class BloodSugarRegisterActivity : AppCompatActivity() {
         withContext(Dispatchers.Main) {
             val alertBuilder = AlertDialog.Builder(this@BloodSugarRegisterActivity)
 
-            with (alertBuilder) {
+            with(alertBuilder) {
                 setTitle("Monitorizarea corecta a Glicemiei")
                 setMessage(input)
                 setPositiveButton("Am inteles", null)
@@ -59,29 +65,64 @@ class BloodSugarRegisterActivity : AppCompatActivity() {
 
                 val builder = AlertDialog.Builder(this)
 
-                with (builder) {
+                with(builder) {
                     setTitle("ALERTA GLICEMIE ANORMALA")
                     if (bloodSugarVal < 74) {
                         setMessage("Glicemia este prea scazuta!")
-                        setPositiveButton("Contacteaza Medic", DialogInterface.OnClickListener(function = positiveButtonClick))
+                        setPositiveButton(
+                            "Contacteaza Medic",
+                            DialogInterface.OnClickListener(function = positiveButtonClick)
+                        )
                         setNegativeButton("Am inteles", null)
                         show()
                     } else if (bloodSugarVal > 106) {
                         setMessage("Glicemia este prea ridicata!")
-                        setPositiveButton("Contacteaza Medic", DialogInterface.OnClickListener(function = positiveButtonClick))
+                        setPositiveButton(
+                            "Contacteaza Medic",
+                            DialogInterface.OnClickListener(function = positiveButtonClick)
+                        )
                         setNegativeButton("Am inteles", null)
                         show()
                     } else {
-                        Toast.makeText(applicationContext, "Tensiunea dvs este in limitele normale!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            applicationContext,
+                            "Glicemia dvs este in limitele normale!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
-                // TODO: Add data in Database
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.IO) {
+                        addBloodSugar(
+                            BloodSugar(
+                                bloodSugar.text.toString(),
+                                System.currentTimeMillis(),
+                                Firebase.auth.currentUser?.email.toString()
+                            )
+                        )
+                    }
+                }
             }
         }
 
         registerBSLevel.setOnClickListener {
-            // TODO: Add data in Database
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.IO) {
+                    addBloodSugar(
+                        BloodSugar(
+                            bloodSugar.text.toString(),
+                            System.currentTimeMillis(),
+                            Firebase.auth.currentUser?.email.toString()
+                        )
+                    )
+                }
+            }
+            Toast.makeText(
+                applicationContext,
+                "Glicemia a fost inregistrata cu succes!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         guideBtn.setOnClickListener {
@@ -106,17 +147,70 @@ class BloodSugarRegisterActivity : AppCompatActivity() {
         infoBS.setOnClickListener {
             val infoBuilder = AlertDialog.Builder(this)
 
-            with (infoBuilder) {
+            with(infoBuilder) {
                 setTitle("Glicemia")
-                setMessage("Glicemia se referă la nivelul zahărului din sânge sau la concentrația " +
-                        "glucozei din sânge. Hidrații de carbon, în principal zahărul și amidonul, " +
-                        "au rolul de a furniza organismului energie. În prezența fermenților salivari, " +
-                        "a enzimelor pancreatice și intestinale, acești hidrați se transformă în cea " +
-                        "mai simplă formă de glucid, respectiv glucoză. Sub această formă, poate trece " +
-                        "din intestinul subțire în sânge, pentru a putea fi folosită de către organism.")
+                setMessage(
+                    "Glicemia se referă la nivelul zahărului din sânge sau la concentrația " +
+                            "glucozei din sânge. Hidrații de carbon, în principal zahărul și amidonul, " +
+                            "au rolul de a furniza organismului energie. În prezența fermenților salivari, " +
+                            "a enzimelor pancreatice și intestinale, acești hidrați se transformă în cea " +
+                            "mai simplă formă de glucid, respectiv glucoză. Sub această formă, poate trece " +
+                            "din intestinul subțire în sânge, pentru a putea fi folosită de către organism."
+                )
                 setPositiveButton("Am inteles", null)
                 show()
             }
         }
+    }
+
+    private fun addBloodSugar(bloodSugar: BloodSugar) {
+        var id: Long
+
+        MedicationApi.retrofitService.getCounters().enqueue(object : retrofit2.Callback<Counters> {
+            override fun onResponse(call: Call<Counters>, response: Response<Counters>) {
+                if (response.isSuccessful) {
+                    id = response.body()!!.counterBS
+                    val updatedCounters = Counters(
+                        response.body()!!.counterMeds,
+                        response.body()!!.counterUsers,
+                        response.body()!!.counterBP,
+                        id + 1,
+                        response.body()!!.counterHR,
+                        response.body()!!.counterOS
+                    )
+
+                    MedicationApi.retrofitService.postBloodSugar(id, bloodSugar)
+                        .enqueue(object : retrofit2.Callback<Void> {
+                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                if (response.isSuccessful) {
+                                    MedicationApi.retrofitService.postCounters(updatedCounters)
+                                        .enqueue(object : retrofit2.Callback<Void> {
+                                            override fun onResponse(
+                                                call: Call<Void>,
+                                                response: Response<Void>
+                                            ) {
+                                            }
+
+                                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                                t.printStackTrace()
+                                            }
+
+                                        })
+                                }
+                            }
+
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                t.printStackTrace()
+                            }
+
+                        })
+                }
+            }
+
+            override fun onFailure(call: Call<Counters>, t: Throwable) {
+                t.printStackTrace()
+            }
+
+        })
     }
 }

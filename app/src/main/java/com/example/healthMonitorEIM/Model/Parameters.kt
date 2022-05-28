@@ -4,28 +4,18 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.sql.Timestamp
 
-data class SystolicBP(
-    @SerializedName("value")
+data class BloodPressure(
+    @SerializedName("sytolicBP")
     @Expose
-    var value: String,
+    var systolicBPValue: String,
+
+    @SerializedName("diastolicBP")
+    @Expose
+    var diastolicBPValue: String,
 
     @SerializedName("timestamp")
     @Expose
-    var timestamp: Timestamp,
-
-    @SerializedName("user")
-    @Expose
-    var user: String
-)
-
-data class DiastolicBP(
-    @SerializedName("value")
-    @Expose
-    var value: String,
-
-    @SerializedName("timestamp")
-    @Expose
-    var timestamp: Timestamp,
+    var timestamp: Long,
 
     @SerializedName("user")
     @Expose
@@ -39,7 +29,7 @@ data class BloodSugar(
 
     @SerializedName("timestamp")
     @Expose
-    var timestamp: Timestamp,
+    var timestamp: Long,
 
     @SerializedName("user")
     @Expose
@@ -53,7 +43,7 @@ data class HeartRate(
 
     @SerializedName("timestamp")
     @Expose
-    var timestamp: Timestamp,
+    var timestamp: Long,
 
     @SerializedName("user")
     @Expose
@@ -67,7 +57,7 @@ data class OxygenSaturation(
 
     @SerializedName("timestamp")
     @Expose
-    var timestamp: Timestamp,
+    var timestamp: Long,
 
     @SerializedName("user")
     @Expose

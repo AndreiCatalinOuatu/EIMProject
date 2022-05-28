@@ -12,13 +12,9 @@ data class Counters(
     @Expose
     var counterUsers: Long,
 
-    @SerializedName("counterSBP")
+    @SerializedName("counterBP")
     @Expose
-    var counterSBP: Long,
-
-    @SerializedName("counterDBP")
-    @Expose
-    var counterDBP: Long,
+    var counterBP: Long,
 
     @SerializedName("counterBS")
     @Expose

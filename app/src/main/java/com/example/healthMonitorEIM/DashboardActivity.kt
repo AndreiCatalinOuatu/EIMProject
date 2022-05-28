@@ -211,8 +211,7 @@ class DashboardActivity : AppCompatActivity() {
                     val updatedCounters = Counters(
                         id + 1,
                         response.body()!!.counterUsers,
-                        response.body()!!.counterSBP,
-                        response.body()!!.counterDBP,
+                        response.body()!!.counterBP,
                         response.body()!!.counterBS,
                         response.body()!!.counterHR,
                         response.body()!!.counterOS

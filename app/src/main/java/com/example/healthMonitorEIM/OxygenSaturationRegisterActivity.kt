@@ -10,6 +10,17 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.healthMonitorEIM.Model.Counters
+import com.example.healthMonitorEIM.Model.OxygenSaturation
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Response
+import java.sql.Timestamp
 
 class OxygenSaturationRegisterActivity : AppCompatActivity() {
 
@@ -35,17 +46,19 @@ class OxygenSaturationRegisterActivity : AppCompatActivity() {
         spO2infoBtn.setOnClickListener {
             val infoBuilder = AlertDialog.Builder(this)
 
-            with (infoBuilder) {
+            with(infoBuilder) {
                 setTitle("Saturatia de oxigen")
-                setMessage("Saturatia de oxigen este unul dintre cei mai importanti indicatori pentru " +
-                        "sanatatea ta. O saturatie scazuta poate duce la diferite complicatii si la " +
-                        "necesitatea unei asistente medicale de urgenta sau a unei masti de oxigen. " +
-                        "Sunt considerate normale pentru saturatia de oxigen valorile de peste 95%. " +
-                        "Mai exact, cu cat acestea se apropie de 100%, cu atat mai bine este pentru " +
-                        "organism si oxigenarea organelor acestuia. O valoare sub 95% a saturatiei " +
-                        "de oxigen indica faptul ca starea de sanatate a pacientului trebuie " +
-                        "monitorizata, iar cand valorile scad sub 90%, atunci pacientul are nevoie " +
-                        "cu siguranta de asistenta medicala de urgenta sau ventilatie mecanica.")
+                setMessage(
+                    "Saturatia de oxigen este unul dintre cei mai importanti indicatori pentru " +
+                            "sanatatea ta. O saturatie scazuta poate duce la diferite complicatii si la " +
+                            "necesitatea unei asistente medicale de urgenta sau a unei masti de oxigen. " +
+                            "Sunt considerate normale pentru saturatia de oxigen valorile de peste 95%. " +
+                            "Mai exact, cu cat acestea se apropie de 100%, cu atat mai bine este pentru " +
+                            "organism si oxigenarea organelor acestuia. O valoare sub 95% a saturatiei " +
+                            "de oxigen indica faptul ca starea de sanatate a pacientului trebuie " +
+                            "monitorizata, iar cand valorile scad sub 90%, atunci pacientul are nevoie " +
+                            "cu siguranta de asistenta medicala de urgenta sau ventilatie mecanica."
+                )
                 setPositiveButton("Am inteles", null)
                 show()
             }
@@ -59,25 +72,115 @@ class OxygenSaturationRegisterActivity : AppCompatActivity() {
                 spO2.text.toString().toInt() < 90 -> {
                     val builder = AlertDialog.Builder(this)
 
-                    with (builder) {
+                    with(builder) {
                         setTitle("ALERTA SATURATIE ANORMALA")
                         setMessage("SpO2 este sub limita normala!")
-                        setPositiveButton("Contacteaza Medic", DialogInterface.OnClickListener(function = positiveButtonClick))
+                        setPositiveButton(
+                            "Contacteaza Medic",
+                            DialogInterface.OnClickListener(function = positiveButtonClick)
+                        )
                         setNegativeButton("OK", null)
                         show()
                     }
 
-                    // TODO: Add data to Database
+                    CoroutineScope(Dispatchers.Main).launch {
+                        withContext(Dispatchers.IO) {
+                            addOxygenSaturation(
+                                OxygenSaturation(
+                                    spO2.text.toString(),
+                                    System.currentTimeMillis(),
+                                    Firebase.auth.currentUser?.email.toString()
+                                )
+                            )
+                        }
+                    }
                 }
                 else -> {
-                    Toast.makeText(applicationContext, "Saturatia este normala", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Saturatia este normala", Toast.LENGTH_SHORT)
+                        .show()
                     // TODO: Add data to Database
+                    CoroutineScope(Dispatchers.Main).launch {
+                        withContext(Dispatchers.IO) {
+                            addOxygenSaturation(
+                                OxygenSaturation(
+                                    spO2.text.toString(),
+                                    System.currentTimeMillis(),
+                                    Firebase.auth.currentUser?.email.toString()
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
 
         registerSpO2Btn.setOnClickListener {
-            // TODO: Add data to Database
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.IO) {
+                    addOxygenSaturation(
+                        OxygenSaturation(
+                            spO2.text.toString(),
+                            System.currentTimeMillis(),
+                            Firebase.auth.currentUser?.email.toString()
+                        )
+                    )
+                }
+            }
+            Toast.makeText(
+                applicationContext,
+                "Saturatia de O2 a fost inregistrata cu succes!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
+    }
+
+    private fun addOxygenSaturation(oxygenSaturation: OxygenSaturation) {
+        var id: Long
+
+        MedicationApi.retrofitService.getCounters().enqueue(object : retrofit2.Callback<Counters> {
+            override fun onResponse(call: Call<Counters>, response: Response<Counters>) {
+                if (response.isSuccessful) {
+                    id = response.body()!!.counterOS
+                    val updatedCounters = Counters(
+                        response.body()!!.counterMeds,
+                        response.body()!!.counterUsers,
+                        response.body()!!.counterBP,
+                        response.body()!!.counterBS,
+                        response.body()!!.counterHR,
+                        id + 1
+                    )
+                    MedicationApi.retrofitService.postOxygenSaturation(id, oxygenSaturation)
+                        .enqueue(object : retrofit2.Callback<Void> {
+                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                if (response.isSuccessful) {
+                                    MedicationApi.retrofitService.postCounters(updatedCounters)
+                                        .enqueue(object : retrofit2.Callback<Void> {
+                                            override fun onResponse(
+                                                call: Call<Void>,
+                                                response: Response<Void>
+                                            ) {
+                                            }
+
+                                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                                t.printStackTrace()
+                                            }
+
+                                        })
+                                }
+                            }
+
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                t.printStackTrace()
+                            }
+
+                        })
+                }
+            }
+
+            override fun onFailure(call: Call<Counters>, t: Throwable) {
+                t.printStackTrace()
+            }
+
+        })
     }
 }
