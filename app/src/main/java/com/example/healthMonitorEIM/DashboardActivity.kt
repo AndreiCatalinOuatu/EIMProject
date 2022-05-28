@@ -8,12 +8,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Build.*
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.healthMonitorEIM.Model.Counters
 import com.example.healthMonitorEIM.Model.Medication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.*
@@ -63,7 +65,7 @@ class DashboardActivity : AppCompatActivity() {
             val items = arrayOf("Medic", "Persoana de Contact")
             val builder = AlertDialog.Builder(this)
 
-            with (builder) {
+            with(builder) {
                 setTitle("Contacte Urgente")
                 setItems(items) { _, which ->
                     if (items[which] == "Medic") {
@@ -89,20 +91,40 @@ class DashboardActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             var chosenParameter = ""
 
-            with (builder) {
+            with(builder) {
                 setTitle("Parametri")
                 setItems(items) { _, which ->
                     chosenParameter = items[which]
                     if (chosenParameter == "Tensiune Arteriala") {
                         startActivity(Intent(applicationContext, BloodPressureActivity::class.java))
                     } else if (chosenParameter == "Puls") {
-                        startActivity(Intent(applicationContext, HeartRateRegisterActivity::class.java))
+                        startActivity(
+                            Intent(
+                                applicationContext,
+                                HeartRateRegisterActivity::class.java
+                            )
+                        )
                     } else if (chosenParameter == "Glicemie") {
-                        startActivity(Intent(applicationContext, BloodSugarRegisterActivity::class.java))
+                        startActivity(
+                            Intent(
+                                applicationContext,
+                                BloodSugarRegisterActivity::class.java
+                            )
+                        )
                     } else if (chosenParameter == "SpO2") {
-                        startActivity(Intent(applicationContext, OxygenSaturationRegisterActivity::class.java))
+                        startActivity(
+                            Intent(
+                                applicationContext,
+                                OxygenSaturationRegisterActivity::class.java
+                            )
+                        )
                     } else if (chosenParameter == "Indice de stres") {
-                        startActivity(Intent(applicationContext, StressRegisterActivity::class.java))
+                        startActivity(
+                            Intent(
+                                applicationContext,
+                                StressRegisterActivity::class.java
+                            )
+                        )
                     }
                 }
                 show()
@@ -180,14 +202,50 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun addMedication(medication: Medication) {
-        MedicationApi.retrofitService.postMedication(1, medication).enqueue(object:
-            retrofit2.Callback<Void> {
-            override fun onResponse(
-                call: Call<Void>,
-                response: Response<Void>
-            ) {}
+        var id: Long
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
+        MedicationApi.retrofitService.getCounters().enqueue(object : retrofit2.Callback<Counters> {
+            override fun onResponse(call: Call<Counters>, response: Response<Counters>) {
+                if (response.isSuccessful) {
+                    id = response.body()!!.counterMeds
+                    val updatedCounters = Counters(
+                        id + 1,
+                        response.body()!!.counterUsers,
+                        response.body()!!.counterSBP,
+                        response.body()!!.counterDBP,
+                        response.body()!!.counterBS,
+                        response.body()!!.counterHR,
+                        response.body()!!.counterOS
+                    )
+                    MedicationApi.retrofitService.postMedication(id, medication).enqueue(object :
+                        retrofit2.Callback<Void> {
+                        override fun onResponse(
+                            call: Call<Void>,
+                            response: Response<Void>
+                        ) {
+                            if (response.isSuccessful) {
+                                MedicationApi.retrofitService.postCounters(updatedCounters)
+                                    .enqueue(object : retrofit2.Callback<Void> {
+                                        override fun onResponse(
+                                            call: Call<Void>,
+                                            response: Response<Void>
+                                        ) {
+                                        }
+                                        override fun onFailure(call: Call<Void>, t: Throwable) {
+                                            t.printStackTrace()
+                                        }
+                                    })
+                            }
+                        }
+
+                        override fun onFailure(call: Call<Void>, t: Throwable) {
+                            t.printStackTrace()
+                        }
+                    })
+                }
+            }
+
+            override fun onFailure(call: Call<Counters>, t: Throwable) {
                 t.printStackTrace()
             }
         })

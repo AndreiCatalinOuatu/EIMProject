@@ -21,7 +21,7 @@ interface MedicationsDBApi {
     fun getMedications(): Call<List<Medication>>
 
     @PUT("Medications/{id}.json")
-    fun postMedication(@Path("id") id: Int, @Body medication: Medication): Call<Void>
+    fun postMedication(@Path("id") id: Long, @Body medication: Medication): Call<Void>
 
     @GET("Users.json")
     fun getUsers(): Call<List<User>>
@@ -32,32 +32,38 @@ interface MedicationsDBApi {
     @GET("Parameters/SystolicBP.json")
     fun getSystolicBP(): Call<List<SystolicBP>>
 
-    @POST("Parameters/SystolicBP/{id}.json")
+    @PUT("Parameters/SystolicBP/{id}.json")
     fun postSystolicBP(@Path("id") id: Int, @Body systolicBP: SystolicBP): Call<Void>
 
     @GET("Parameters/DiastolicBP.json")
     fun getDiastolicBP(): Call<List<DiastolicBP>>
 
-    @POST("Parameters/DiastolicBP/{id}.json")
+    @PUT("Parameters/DiastolicBP/{id}.json")
     fun postDiastolicBP(@Path("id") id: Int, @Body diastolicBP: DiastolicBP): Call<Void>
 
     @GET("Parameters/HeartRate.json")
     fun getHeartRate(): Call<List<HeartRate>>
 
-    @POST("Parameters/HeartRate/{id}.json")
+    @PUT("Parameters/HeartRate/{id}.json")
     fun postHearRate(@Path("id") id: Int, @Body heartRate: HeartRate): Call<Void>
 
     @GET("Parameters/BloodSugar.json")
     fun getBloodSugar(): Call<List<BloodSugar>>
 
-    @POST("Parameters/BloodSugar/{id}.json")
+    @PUT("Parameters/BloodSugar/{id}.json")
     fun postBloodSugar(@Path("id") id: Int, @Body bloodSugar: BloodSugar): Call<Void>
 
     @GET("Parameters/OxygenSaturation.json")
     fun getOxygenSaturation(): Call<List<OxygenSaturation>>
 
-    @POST("Parameters/OxygenSaturation/{id}.json")
+    @PUT("Parameters/OxygenSaturation/{id}.json")
     fun postOxygenSaturation(@Path(":id") id: Int, @Body oxygenSaturation: OxygenSaturation): Call<Void>
+
+    @GET("Counters.json")
+    fun getCounters(): Call<Counters>
+
+    @PUT("Counters.json")
+    fun postCounters(@Body counters: Counters): Call<Void>
 }
 
 object MedicationApi {
