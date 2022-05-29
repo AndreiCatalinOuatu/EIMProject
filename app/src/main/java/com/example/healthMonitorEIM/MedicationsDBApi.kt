@@ -1,13 +1,11 @@
 package com.example.healthMonitorEIM
 
 import com.example.healthMonitorEIM.Model.*
-import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
 
 private const val DB_URL = "https://healthmonitor-4c635-default-rtdb.europe-west1.firebasedatabase.app/"

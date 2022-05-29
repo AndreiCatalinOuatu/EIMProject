@@ -41,11 +41,8 @@ class ViewMedicationsFragment : Fragment() {
                                 response: Response<List<Medication>>
                             ) {
                                 if (response.isSuccessful) {
-                                    println(response.body()!!)
-                                    println(Firebase.auth.currentUser?.toString())
                                     val userMedications = response.body()!!
                                         .filter { medication -> medication.user == Firebase.auth.currentUser?.email.toString() }
-                                    println(userMedications)
                                     val adapter = RecyclerAdapter(userMedications as ArrayList<Medication>)
                                     viewRec.layoutManager = LinearLayoutManager(activity?.applicationContext, RecyclerView.VERTICAL, false)
                                     viewRec.adapter = adapter

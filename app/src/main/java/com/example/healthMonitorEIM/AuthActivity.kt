@@ -30,6 +30,7 @@ class AuthActivity : AppCompatActivity() {
         val emailTxt = findViewById<TextInputEditText>(R.id.emailAuthET)
         val passwordTxt = findViewById<TextInputEditText>(R.id.passwordAuthET)
         val contactTxt = findViewById<TextInputEditText>(R.id.contactET)
+        val doctorTxt = findViewById<TextInputEditText>(R.id.doctorET)
 
         val registerBtn = findViewById<Button>(R.id.registerBtn)
 
@@ -37,6 +38,7 @@ class AuthActivity : AppCompatActivity() {
             val email = emailTxt.text.toString()
             val password = passwordTxt.text.toString()
             val contactPhone = contactTxt.text.toString()
+            val doctorPhone = doctorTxt.text.toString()
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -44,7 +46,7 @@ class AuthActivity : AppCompatActivity() {
                             .show()
                         CoroutineScope(Dispatchers.Main).launch {
                             withContext(Dispatchers.IO) {
-                                addUser(User(email, contactPhone))
+                                addUser(User(email, contactPhone, doctorPhone))
                             }
                         }
                         val intent = Intent(this@AuthActivity, DashboardActivity::class.java)

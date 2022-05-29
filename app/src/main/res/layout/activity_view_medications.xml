@@ -3,17 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_bar_dashboard"
+        android:name="com.example.healthMonitorEIM.NavBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_alignParentBottom="true"
+        tools:layout="@layout/navigation_bar_fragment" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/viewMedsFrag"
+        android:name="com.example.healthMonitorEIM.ViewMedicationsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="40dp"
         android:layout_marginTop="100dp"
-        android:id="@+id/viewMedsFrag"
-        android:name="com.example.healthMonitorEIM.ViewMedicationsFragment"
+        android:layout_marginEnd="40dp"
         tools:layout="@layout/view_medications_fragment">
     </androidx.fragment.app.FragmentContainerView>
+
 
 </RelativeLayout>

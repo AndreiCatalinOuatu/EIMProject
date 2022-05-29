@@ -486,19 +486,4 @@ class ViewStatsActivity : AppCompatActivity() {
         xAxis.setDrawLabels(true)
         xAxis.granularity = 1f
     }
-
-    private fun setDataToLineChart() {
-        val entries: ArrayList<Entry> = ArrayList()
-
-        for (i in 1..30) {
-            entries.add(Entry(i.toFloat(), (120 - 2 * i).toFloat()))
-        }
-
-        val lineDataSet = LineDataSet(entries, "")
-        val data = LineData(lineDataSet)
-
-        lineChart.data = data
-
-        lineChart.invalidate()
-    }
 }

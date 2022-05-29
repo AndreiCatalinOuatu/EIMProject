@@ -10,5 +10,9 @@ data class User (
 
     @SerializedName("ContactPersonPhone")
     @Expose
-    var contactPhoneNo: String
+    var contactPhoneNo: String,
+
+    @SerializedName("DoctorPhone")
+    @Expose
+    var doctorPhoneNo: String
 )

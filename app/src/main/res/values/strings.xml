@@ -32,6 +32,9 @@
     <string name="creeare_cont">Creare Cont</string>
     <string name="telefon_persoana_de_contact">Telefon Persoana de Contact</string>
     <string name="cum_monitorizez_corect">Cum monitorizez corect?</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="alerteaza">Alerteaza</string>
+    <string name="telefon_medic_personal">Telefon Medic Personal</string>
     <string-array name="parameters_array">
         <item>Alege un parametru…</item>
         <item>Tensiune Arteriala Sistolica</item>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/dashboard"/>
+
+    <item
+        android:id="@+id/nav_alert"
+        android:icon="@drawable/ic_alert_black_24dp"
+        android:title="@string/alerteaza" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_logout_black_24dp"
+        android:title="Deconectare" />
+
+</menu>

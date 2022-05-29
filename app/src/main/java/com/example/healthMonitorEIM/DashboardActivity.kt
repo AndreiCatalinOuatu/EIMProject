@@ -147,7 +147,6 @@ class DashboardActivity : AppCompatActivity() {
             builder.setTitle("Adauga Tratament Nou")
             builder.setPositiveButton("Adauga Tratament") { _, _ ->
                 scheduleNotification()
-                // TODO: Add these values to database
                 CoroutineScope(Dispatchers.Main).launch {
                     withContext(Dispatchers.IO) {
                         addMedication(
