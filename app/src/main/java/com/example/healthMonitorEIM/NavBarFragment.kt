@@ -13,6 +13,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
 
@@ -30,7 +34,6 @@ class NavBarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val bottomNavigationBar = requireView().findViewById<BottomNavigationView>(R.id.nav_view)
-        val menu = bottomNavigationBar.menu
 
         bottomNavigationBar?.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -43,42 +46,49 @@ class NavBarFragment : Fragment() {
                     val items = arrayOf("Medic", "Persoana de Contact")
                     val builder = context?.let { AlertDialog.Builder(it) }
 
-                    MedicationApi.retrofitService.getUsers().enqueue(object : retrofit2.Callback<List<User>> {
-                        override fun onResponse(
-                            call: Call<List<User>>,
-                            response: Response<List<User>>
-                        ) {
-                            if (response.isSuccessful) {
-                                val connectedUser = response.body()!!.filter { user -> user.email == Firebase.auth.currentUser?.email.toString() }
-                                val contactPhone = connectedUser[0].contactPhoneNo
-                                val doctorPhone = connectedUser[0].doctorPhoneNo
-                                with(builder) {
-                                    this?.setTitle("Contacte Urgente")
-                                    this?.setItems(items) { _, which ->
-                                        if (items[which] == "Medic") {
-                                            val phoneCallUri = Uri.parse("tel:$doctorPhone")
-                                            val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
-                                                it.data = phoneCallUri
+                    CoroutineScope(Dispatchers.Main).launch {
+                        kotlin.runCatching {
+                            withContext(Dispatchers.IO) {
+
+                                MedicationApi.retrofitService.getUsers().enqueue(object : retrofit2.Callback<List<User>> {
+                                    override fun onResponse(
+                                        call: Call<List<User>>,
+                                        response: Response<List<User>>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            val connectedUser = response.body()!!.filter { user -> user.email == Firebase.auth.currentUser?.email.toString() }
+                                            val contactPhone = connectedUser[0].contactPhoneNo
+                                            val doctorPhone = connectedUser[0].doctorPhoneNo
+                                            with(builder) {
+                                                this?.setTitle("Contacte Urgente")
+                                                this?.setItems(items) { _, which ->
+                                                    if (items[which] == "Medic") {
+                                                        val phoneCallUri = Uri.parse("tel:$doctorPhone")
+                                                        val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
+                                                            it.data = phoneCallUri
+                                                        }
+                                                        startActivity(phoneCallIntent)
+                                                    } else if (items[which] == "Persoana de Contact") {
+                                                        val phoneCallUri = Uri.parse("tel:$contactPhone")
+                                                        val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
+                                                            it.data = phoneCallUri
+                                                        }
+                                                        startActivity(phoneCallIntent)
+                                                    }
+                                                }
+                                                this?.show()
                                             }
-                                            startActivity(phoneCallIntent)
-                                        } else if (items[which] == "Persoana de Contact") {
-                                            val phoneCallUri = Uri.parse("tel:$contactPhone")
-                                            val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
-                                                it.data = phoneCallUri
-                                            }
-                                            startActivity(phoneCallIntent)
                                         }
                                     }
-                                    this?.show()
-                                }
+
+                                    override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                                        t.printStackTrace()
+                                    }
+
+                                })
                             }
                         }
-
-                        override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                            t.printStackTrace()
-                        }
-
-                    })
+                    }
                 }
                 R.id.nav_logout -> {
                     FirebaseAuth.getInstance().signOut()

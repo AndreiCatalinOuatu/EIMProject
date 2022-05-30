@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this@MainActivity, DashboardActivity::class.java)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(applicationContext, "Wrong combination of username and passwpord", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Wrong combination of username and password", Toast.LENGTH_SHORT).show()
                     }
                 }
 

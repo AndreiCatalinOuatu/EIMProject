@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.healthMonitorEIM.Model.Counters
 import com.example.healthMonitorEIM.Model.OxygenSaturation
+import com.example.healthMonitorEIM.Model.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -19,19 +20,41 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
-import java.sql.Timestamp
 
 class OxygenSaturationRegisterActivity : AppCompatActivity() {
 
     private val positiveButtonClick = { _: DialogInterface, _: Int ->
-        val phoneCallUri = Uri.parse("tel:" + "0743434867")
 
-        val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
-            it.data = phoneCallUri
+        CoroutineScope(Dispatchers.Main).launch {
+            kotlin.runCatching {
+                withContext(Dispatchers.IO) {
+                    MedicationApi.retrofitService.getUsers().enqueue(object : Callback<List<User>> {
+                        override fun onResponse(
+                            call: Call<List<User>>,
+                            response: Response<List<User>>
+                        ) {
+                            if (response.isSuccessful) {
+                                val users = response.body()!!
+                                val connectedUser = users.filter { user -> user.email == Firebase.auth.currentUser?.email.toString() }[0]
+                                val phoneCallUri = Uri.parse("tel: " + connectedUser.doctorPhoneNo)
+                                val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
+                                    it.data = phoneCallUri
+                                }
+                                startActivity(phoneCallIntent)
+                            }
+                        }
+
+                        override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                            t.printStackTrace()
+                        }
+
+                    })
+                }
+            }
         }
-
-        startActivity(phoneCallIntent)
+        Unit
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

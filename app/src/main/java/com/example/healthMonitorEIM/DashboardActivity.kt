@@ -5,14 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
 import android.net.Uri
-import android.os.Build
 import android.os.Build.*
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.healthMonitorEIM.Model.Counters
@@ -28,9 +25,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 class DashboardActivity : AppCompatActivity() {
-
-    private var alarmMgr: AlarmManager? = null
-    private lateinit var alarmIntent: PendingIntent
+    
     private lateinit var auth: FirebaseAuth
 
     private fun createNotificationChannel() {
@@ -89,42 +84,48 @@ class DashboardActivity : AppCompatActivity() {
         monitorParamBtn.setOnClickListener {
             val items = arrayOf("Tensiune Arteriala", "Puls", "Glicemie", "SpO2", "Indice de stres")
             val builder = AlertDialog.Builder(this)
-            var chosenParameter = ""
+            var chosenParameter: String
 
             with(builder) {
                 setTitle("Parametri")
                 setItems(items) { _, which ->
                     chosenParameter = items[which]
-                    if (chosenParameter == "Tensiune Arteriala") {
-                        startActivity(Intent(applicationContext, BloodPressureActivity::class.java))
-                    } else if (chosenParameter == "Puls") {
-                        startActivity(
-                            Intent(
-                                applicationContext,
-                                HeartRateRegisterActivity::class.java
+                    when (chosenParameter) {
+                        "Tensiune Arteriala" -> {
+                            startActivity(Intent(applicationContext, BloodPressureActivity::class.java))
+                        }
+                        "Puls" -> {
+                            startActivity(
+                                Intent(
+                                    applicationContext,
+                                    HeartRateRegisterActivity::class.java
+                                )
                             )
-                        )
-                    } else if (chosenParameter == "Glicemie") {
-                        startActivity(
-                            Intent(
-                                applicationContext,
-                                BloodSugarRegisterActivity::class.java
+                        }
+                        "Glicemie" -> {
+                            startActivity(
+                                Intent(
+                                    applicationContext,
+                                    BloodSugarRegisterActivity::class.java
+                                )
                             )
-                        )
-                    } else if (chosenParameter == "SpO2") {
-                        startActivity(
-                            Intent(
-                                applicationContext,
-                                OxygenSaturationRegisterActivity::class.java
+                        }
+                        "SpO2" -> {
+                            startActivity(
+                                Intent(
+                                    applicationContext,
+                                    OxygenSaturationRegisterActivity::class.java
+                                )
                             )
-                        )
-                    } else if (chosenParameter == "Indice de stres") {
-                        startActivity(
-                            Intent(
-                                applicationContext,
-                                StressRegisterActivity::class.java
+                        }
+                        "Indice de stres" -> {
+                            startActivity(
+                                Intent(
+                                    applicationContext,
+                                    StressRegisterActivity::class.java
+                                )
                             )
-                        )
+                        }
                     }
                 }
                 show()
@@ -146,7 +147,7 @@ class DashboardActivity : AppCompatActivity() {
 
             builder.setTitle("Adauga Tratament Nou")
             builder.setPositiveButton("Adauga Tratament") { _, _ ->
-                scheduleNotification()
+                scheduleNotification(medicationNameTxt.text.toString(), pillsPerDayTxt.text.toString())
                 CoroutineScope(Dispatchers.Main).launch {
                     withContext(Dispatchers.IO) {
                         addMedication(
@@ -174,10 +175,10 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun scheduleNotification() {
+    private fun scheduleNotification(medicationName: String, pillsPerDay: String) {
         val intent = Intent(applicationContext, AlarmReceiver::class.java)
         intent.putExtra(titleExtra, "Notificare medicamentatie")
-        intent.putExtra(messageExtra, "Aveti de luat 3 Nurofen astazi")
+        intent.putExtra(messageExtra, "Aveti de luat $pillsPerDay $medicationName astazi")
 
         val pendingIntent = PendingIntent.getBroadcast(
             applicationContext,
@@ -189,13 +190,14 @@ class DashboardActivity : AppCompatActivity() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, 11)
-            set(Calendar.MINUTE, 14)
+            set(Calendar.HOUR_OF_DAY, 12)
+            set(Calendar.MINUTE, 7)
         }
 
-        alarmManager.setExactAndAllowWhileIdle(
+        alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
-            1000 * 60 * 60 * 24,
+            calendar.timeInMillis,
+            86400000L,
             pendingIntent
         )
     }

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.healthMonitorEIM.Model.BloodPressure
 import com.example.healthMonitorEIM.Model.Counters
+import com.example.healthMonitorEIM.Model.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -23,18 +24,42 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class BloodPressureActivity : AppCompatActivity() {
 
     private val positiveButtonClick = { _: DialogInterface, _: Int ->
-        val phoneCallUri = Uri.parse("tel:" + "0743434867")
 
-        val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
-            it.data = phoneCallUri
+        CoroutineScope(Dispatchers.Main).launch {
+            kotlin.runCatching {
+                withContext(Dispatchers.IO) {
+                    MedicationApi.retrofitService.getUsers().enqueue(object : Callback<List<User>> {
+                        override fun onResponse(
+                            call: Call<List<User>>,
+                            response: Response<List<User>>
+                        ) {
+                            if (response.isSuccessful) {
+                                val users = response.body()!!
+                                val connectedUser =
+                                    users.filter { user -> user.email == Firebase.auth.currentUser?.email.toString() }[0]
+                                val phoneCallUri = Uri.parse("tel: " + connectedUser.doctorPhoneNo)
+                                val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
+                                    it.data = phoneCallUri
+                                }
+                                startActivity(phoneCallIntent)
+                            }
+                        }
+
+                        override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                            t.printStackTrace()
+                        }
+
+                    })
+                }
+            }
         }
-
-        startActivity(phoneCallIntent)
+        Unit
     }
 
     private suspend fun printOnMainThread(input: String) {
@@ -174,7 +199,7 @@ class BloodPressureActivity : AppCompatActivity() {
                     val doc =
                         Jsoup.connect("https://www.reginamaria.ro/articole-medicale/invata-sa-ti-masori-corect-tensiunea-arteriala")
                             .get()
-                    /*val el = doc.getElementById("article")
+                    val el = doc.getElementById("article")
                     val links = el.select("p")
                     var msg = ""
 
@@ -182,7 +207,7 @@ class BloodPressureActivity : AppCompatActivity() {
                         msg += link.text().toString() + "\n"
                     }
 
-                   printOnMainThread(msg)*/
+                    printOnMainThread(msg)
                 }
             }
         }
