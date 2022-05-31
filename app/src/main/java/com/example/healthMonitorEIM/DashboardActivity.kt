@@ -51,35 +51,9 @@ class DashboardActivity : AppCompatActivity() {
         helloMsg.text = "Buna, $user!"
 
         val monitorParamBtn = findViewById<Button>(R.id.monitorParameters)
-        val alertBtn = findViewById<Button>(R.id.alert)
         val addNewMedicationBtn = findViewById<Button>(R.id.addNewMedication)
         val viewStatsBtn = findViewById<Button>(R.id.viewStats)
         val viewMedicationsBtn = findViewById<Button>(R.id.viewMedicationDetails)
-
-        alertBtn.setOnClickListener {
-            val items = arrayOf("Medic", "Persoana de Contact")
-            val builder = AlertDialog.Builder(this)
-
-            with(builder) {
-                setTitle("Contacte Urgente")
-                setItems(items) { _, which ->
-                    if (items[which] == "Medic") {
-                        val phoneCallUri = Uri.parse("tel:" + "0743434867")
-                        val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
-                            it.data = phoneCallUri
-                        }
-                        startActivity(phoneCallIntent)
-                    } else if (items[which] == "Persoana de Contact") {
-                        val phoneCallUri = Uri.parse("tel:" + "0722222222")
-                        val phoneCallIntent = Intent(Intent.ACTION_DIAL).also {
-                            it.data = phoneCallUri
-                        }
-                        startActivity(phoneCallIntent)
-                    }
-                }
-                show()
-            }
-        }
 
         monitorParamBtn.setOnClickListener {
             val items = arrayOf("Tensiune Arteriala", "Puls", "Glicemie", "SpO2", "Indice de stres")

@@ -17,3 +17,11 @@ buildscript {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+task test(type: Test) {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "passed")
+    }
+    testLogging.showStandardStreams = true
+}

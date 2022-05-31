@@ -23,7 +23,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class OxygenSaturationRegisterActivity : AppCompatActivity() {
+open class OxygenSaturationRegisterActivity : AppCompatActivity() {
 
     private val positiveButtonClick = { _: DialogInterface, _: Int ->
 
@@ -87,17 +87,21 @@ class OxygenSaturationRegisterActivity : AppCompatActivity() {
             }
         }
 
+        val level = getSPO2level(spO2.text.toString())
+        val msg = level.second
+        val abnormalSaturation = level.first
+
         checkSpO2Btn.setOnClickListener {
             when {
                 spO2.length() == 0 -> {
                     spO2.error = "Completati cu valoarea saturatiei de O2"
                 }
-                spO2.text.toString().toInt() < 90 -> {
+                abnormalSaturation -> {
                     val builder = AlertDialog.Builder(this)
 
                     with(builder) {
                         setTitle("ALERTA SATURATIE ANORMALA")
-                        setMessage("SpO2 este sub limita normala!")
+                        setMessage(msg)
                         setPositiveButton(
                             "Contacteaza Medic",
                             DialogInterface.OnClickListener(function = positiveButtonClick)
@@ -119,9 +123,8 @@ class OxygenSaturationRegisterActivity : AppCompatActivity() {
                     }
                 }
                 else -> {
-                    Toast.makeText(applicationContext, "Saturatia este normala", Toast.LENGTH_SHORT)
+                    Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT)
                         .show()
-                    // TODO: Add data to Database
                     CoroutineScope(Dispatchers.Main).launch {
                         withContext(Dispatchers.IO) {
                             addOxygenSaturation(
@@ -157,7 +160,7 @@ class OxygenSaturationRegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun addOxygenSaturation(oxygenSaturation: OxygenSaturation) {
+    fun addOxygenSaturation(oxygenSaturation: OxygenSaturation) {
         var id: Long
 
         MedicationApi.retrofitService.getCounters().enqueue(object : retrofit2.Callback<Counters> {
@@ -205,5 +208,15 @@ class OxygenSaturationRegisterActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun getSPO2level(oxygenSaturationValue: String) : Pair<Boolean, String> {
+        return when {
+            oxygenSaturationValue.toInt() < 90 -> {
+                Pair(true, "Saturatia este sub limita normala!")
+            } else -> {
+                Pair(false, "Saturatia este in limite normale!")
+            }
+        }
     }
 }

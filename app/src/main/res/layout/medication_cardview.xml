@@ -7,8 +7,8 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:id="@+id/medicationCard"
-    card_view:cardBackgroundColor="@color/purple_200"
-    card_view:cardCornerRadius="8dp"
+    card_view:cardBackgroundColor="#00FF7F"
+    card_view:cardCornerRadius="12dp"
     card_view:contentPadding="4dp">
 
     <RelativeLayout

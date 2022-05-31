@@ -15,11 +15,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="37dp">
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/logo_foreground" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Login"
+            android:text="@string/autentificare"
+            android:gravity="center"
             android:textAllCaps="true"
             android:textColor="@color/black"
             android:textSize="40sp" />
@@ -34,7 +41,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:textColorHint="@color/black"
                 app:boxStrokeColor="@color/black"
                 app:boxStrokeWidthFocused="2dp"
@@ -56,7 +63,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="@string/parola"
                 android:textColorHint="@color/black"
                 app:boxStrokeColor="@color/black"
                 app:boxStrokeWidthFocused="2dp"
@@ -74,13 +81,16 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/loginBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="Login"
-                android:textColor="@color/white" />
+                android:background="#FF0000"
+                android:text="@string/autentificare"
+                android:textColor="#FFFFFF"
+                tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
 
             <TextView
                 android:layout_width="match_parent"

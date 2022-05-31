@@ -15,6 +15,12 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="37dp">
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/logo_foreground" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -120,13 +126,14 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/registerBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/creeaza_cont"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:background="#FF0000"/>
 
         </LinearLayout>
 

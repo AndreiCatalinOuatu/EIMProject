@@ -6,6 +6,15 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/app_medication"
+        android:layout_marginStart="300dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"/>
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_bar_dashboard"
         android:name="com.example.healthMonitorEIM.NavBarFragment"
@@ -27,5 +36,13 @@
         tools:layout="@layout/view_medications_fragment">
     </androidx.fragment.app.FragmentContainerView>
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tratamente"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="50dp"
+        android:textSize="24sp" />
 
 </RelativeLayout>

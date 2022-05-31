@@ -35,6 +35,8 @@
     <string name="dashboard">Dashboard</string>
     <string name="alerteaza">Alerteaza</string>
     <string name="telefon_medic_personal">Telefon Medic Personal</string>
+    <string name="autentificare">Autentificare</string>
+    <string name="tratamente">Tratamente</string>
     <string-array name="parameters_array">
         <item>Alege un parametru…</item>
         <item>Tensiune Arteriala Sistolica</item>

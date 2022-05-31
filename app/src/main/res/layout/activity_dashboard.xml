@@ -19,71 +19,84 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.073" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/addNewMedication"
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginTop="144dp"
+        android:background="#FF0000"
         android:text="@string/adauga_tratament"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/viewMedicationDetails"
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginTop="214dp"
+        android:background="#FF0000"
         android:text="@string/detalii_tratament"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/monitorParameters"
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginTop="284dp"
+        android:background="#FF0000"
         android:text="@string/monitorizeaza_parametri"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/viewStats"
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginTop="354dp"
+        android:background="#FF0000"
         android:text="@string/vizualizeaza_statistici"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/alert"
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="424dp"
-        android:text="@string/alerta"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_bar_dashboard"
+        android:name="com.example.healthMonitorEIM.NavBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:id="@+id/nav_bar_dashboard"
-        tools:layout="@layout/navigation_bar_fragment"
-        android:name="com.example.healthMonitorEIM.NavBarFragment"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout="@layout/navigation_bar_fragment">
 
     </androidx.fragment.app.FragmentContainerView>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:layout_marginStart="287dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="631dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

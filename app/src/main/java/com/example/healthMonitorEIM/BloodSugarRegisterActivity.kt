@@ -24,7 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BloodSugarRegisterActivity : AppCompatActivity() {
+open class BloodSugarRegisterActivity : AppCompatActivity() {
 
     private val positiveButtonClick = { _: DialogInterface, _: Int ->
 
@@ -90,17 +90,13 @@ class BloodSugarRegisterActivity : AppCompatActivity() {
                 val builder = AlertDialog.Builder(this)
 
                 with(builder) {
-                    setTitle("ALERTA GLICEMIE ANORMALA")
-                    if (bloodSugarVal < 74) {
-                        setMessage("Glicemia este prea scazuta!")
-                        setPositiveButton(
-                            "Contacteaza Medic",
-                            DialogInterface.OnClickListener(function = positiveButtonClick)
-                        )
-                        setNegativeButton("Am inteles", null)
-                        show()
-                    } else if (bloodSugarVal > 106) {
-                        setMessage("Glicemia este prea ridicata!")
+                    val level = getBloodSugarLevel(bloodSugarVal.toString())
+                    val abnormalBloodSugarLevel = level.first
+                    val msg = level.second
+
+                    if (abnormalBloodSugarLevel) {
+                        setTitle("ALERTA GLICEMIE ANORMALA")
+                        setMessage(msg)
                         setPositiveButton(
                             "Contacteaza Medic",
                             DialogInterface.OnClickListener(function = positiveButtonClick)
@@ -187,7 +183,7 @@ class BloodSugarRegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun addBloodSugar(bloodSugar: BloodSugar) {
+    fun addBloodSugar(bloodSugar: BloodSugar) {
         var id: Long
 
         MedicationApi.retrofitService.getCounters().enqueue(object : retrofit2.Callback<Counters> {
@@ -236,5 +232,19 @@ class BloodSugarRegisterActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun getBloodSugarLevel(bloodSugarValue: String) : Pair<Boolean, String> {
+        return when {
+            bloodSugarValue.toInt() < 74 -> {
+                Pair(true, "Glicemia este sub limita normala!")
+            }
+            bloodSugarValue.toInt() > 106 -> {
+                Pair(true, "Glicemia este peste limita normala!")
+            }
+            else -> {
+                Pair(false, "Glicemia se afla in limite normale!")
+            }
+        }
     }
 }

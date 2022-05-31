@@ -27,7 +27,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BloodPressureActivity : AppCompatActivity() {
+open class BloodPressureActivity : AppCompatActivity() {
 
     private val positiveButtonClick = { _: DialogInterface, _: Int ->
 
@@ -121,17 +121,13 @@ class BloodPressureActivity : AppCompatActivity() {
                 val builder = AlertDialog.Builder(this)
 
                 with(builder) {
-                    setTitle("ALERTA TENSIUNE ARTERIALA ANORMALA")
-                    if (systolicBPValue < 90 || diastolicBPValue < 60) {
-                        setMessage("Tensiunea arteriala este prea scazuta!")
-                        setPositiveButton(
-                            "Contacteaza Medic",
-                            DialogInterface.OnClickListener(function = positiveButtonClick)
-                        )
-                        setNegativeButton("Am inteles", null)
-                        show()
-                    } else if (systolicBPValue > 120 || diastolicBPValue > 90) {
-                        setMessage("Tensiunea arteriala este prea ridicata!")
+                    val level = getBloodPressureLevel(systolicBPValue.toString(), diastolicBPValue.toString())
+                    val msg = level.second
+                    val abnormalBP = level.first
+
+                    if (abnormalBP) {
+                        setTitle("ALERTA TENSIUNE ARTERIALA ANORMALA")
+                        setMessage(msg)
                         setPositiveButton(
                             "Contacteaza Medic",
                             DialogInterface.OnClickListener(function = positiveButtonClick)
@@ -141,7 +137,7 @@ class BloodPressureActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             applicationContext,
-                            "Tensiunea dvs este in limitele normale!",
+                            msg,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -213,7 +209,7 @@ class BloodPressureActivity : AppCompatActivity() {
         }
     }
 
-    private fun addBloodPressure(bloodPressure: BloodPressure) {
+    fun addBloodPressure(bloodPressure: BloodPressure) {
         var id: Long
 
         MedicationApi.retrofitService.getCounters().enqueue(object : retrofit2.Callback<Counters> {
@@ -262,5 +258,19 @@ class BloodPressureActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun getBloodPressureLevel(systolicBPValue: String, diastolicBPValue: String) : Pair<Boolean, String> {
+        return when {
+            systolicBPValue.toInt() < 90 || diastolicBPValue.toInt() < 60 -> {
+                Pair(true, "Tensiunea dvs este prea scazuta!")
+            }
+            systolicBPValue.toInt() > 120 || diastolicBPValue.toInt() > 90 -> {
+                Pair(true, "Tensiunea dvs este prea ridicata!")
+            }
+            else -> {
+                Pair(false, "Tensiunea dvs este in limite normale!")
+            }
+        }
     }
 }

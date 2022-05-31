@@ -24,7 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HeartRateRegisterActivity : AppCompatActivity() {
+open class HeartRateRegisterActivity : AppCompatActivity() {
 
     private val positiveButtonClick = { _: DialogInterface, _: Int ->
 
@@ -107,19 +107,13 @@ class HeartRateRegisterActivity : AppCompatActivity() {
                 pulseValue.error = "Completati cu valoarea pulsului!"
             } else {
                 val builder = AlertDialog.Builder(this)
-
+                val level = heartRateLevel(pulseValue.text.toString())
+                val msg = level.second
+                val abnormalPulse = level.first
                 with(builder) {
-                    setTitle("ALERTA PULS ANORMAL")
-                    if (pulseValue.text.toString().toInt() < 60) {
-                        setMessage("Pulsul este sub limita normala!")
-                        setPositiveButton(
-                            "Contacteaza Medic",
-                            DialogInterface.OnClickListener(function = positiveButtonClick)
-                        )
-                        setNegativeButton("OK", null)
-                        show()
-                    } else if (pulseValue.text.toString().toInt() > 100) {
-                        setMessage("Pulsul este peste limita normala!")
+                    if (abnormalPulse) {
+                        setTitle("ALERTA PULS ANORMAL")
+                        setMessage(msg)
                         setPositiveButton(
                             "Contacteaza Medic",
                             DialogInterface.OnClickListener(function = positiveButtonClick)
@@ -129,7 +123,7 @@ class HeartRateRegisterActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             applicationContext,
-                            "Pulsul se afla in limite normale!",
+                            msg,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -197,7 +191,7 @@ class HeartRateRegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun addHeartRate(heartRate: HeartRate) {
+    fun addHeartRate(heartRate: HeartRate) {
         var id: Long
 
         MedicationApi.retrofitService.getCounters().enqueue(object : retrofit2.Callback<Counters> {
@@ -246,5 +240,19 @@ class HeartRateRegisterActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun heartRateLevel(pulseValue: String) : Pair<Boolean, String>{
+        return when {
+            pulseValue.toInt() < 60 -> {
+                Pair(true, "Pulsul este sub limita normala!")
+            }
+            pulseValue.toInt() > 100 -> {
+                Pair(true, "Pulsul este peste limita normala!")
+            }
+            else -> {
+                Pair(false, "Pulsul se afla in limite normale!")
+            }
+        }
     }
 }
