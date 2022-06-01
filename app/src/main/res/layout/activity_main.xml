@@ -21,16 +21,6 @@
             android:layout_height="wrap_content"
             app:srcCompat="@mipmap/logo_foreground" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/autentificare"
-            android:gravity="center"
-            android:textAllCaps="true"
-            android:textColor="@color/black"
-            android:textSize="40sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

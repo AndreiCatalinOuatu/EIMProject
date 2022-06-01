@@ -87,11 +87,10 @@ open class OxygenSaturationRegisterActivity : AppCompatActivity() {
             }
         }
 
-        val level = getSPO2level(spO2.text.toString())
-        val msg = level.second
-        val abnormalSaturation = level.first
-
         checkSpO2Btn.setOnClickListener {
+            val level = getSPO2level(spO2.text.toString())
+            val msg = level.second
+            val abnormalSaturation = level.first
             when {
                 spO2.length() == 0 -> {
                     spO2.error = "Completati cu valoarea saturatiei de O2"
